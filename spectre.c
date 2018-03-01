@@ -12,7 +12,7 @@
 #define PAGE_SIZE	(1024*4)
 #define PAGE_NUM	256
 #define PROBE_TIMES 1000
-#define CACHE_HIT_THRESHOLD (150) /* assume cache hit if time <= threshold */
+#define CACHE_HIT_THRESHOLD (150) /* assume cache hit if access delay <= threshold */
 
 uint8_t probe_pages[PAGE_NUM * PAGE_SIZE];
 static int cache_hit_times[PAGE_NUM];
@@ -43,7 +43,7 @@ int probe_memory_byte(uint8_t* addr) {
         
         move_one_page_in_cache(addr);
 
-        //find the page which in cache. Order is lightly mixed up to prevent stride prediction
+        //find the pages which in cache. Order is lightly mixed up to prevent stride prediction
         for (int i = 0; i < PAGE_NUM; i++) {
             int mix_i = ((i * 167) + 13) & 255;
             if (get_access_delay(&probe_pages[mix_i * PAGE_SIZE]) <= CACHE_HIT_THRESHOLD)
@@ -51,7 +51,7 @@ int probe_memory_byte(uint8_t* addr) {
         }
     }
     
-    //find the page which has highest access speed.
+    //find the page which has highest access frequency.
     int max = -1, index_of_max = '?';
 	for (int i = 0; i < PAGE_NUM; i++) {
 		if (cache_hit_times[i] && cache_hit_times[i] > max) {
