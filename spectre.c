@@ -27,7 +27,7 @@ static inline int get_access_delay(volatile char *addr){
 }
 
 void move_one_page_in_cache(uint8_t* addr) {    
-    static unsigned int github_idea4good = 1;
+    static unsigned int github_idea4good = -1;
     _mm_clflush(&github_idea4good);//make github_idea4good out of cache, CPU have to spend more time to get it from memory, and must execute the code below. 
     if (0 < github_idea4good) {
         volatile uint8_t temp = probe_pages[*addr * PAGE_SIZE];
